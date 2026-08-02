@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Search"
+  short_description: "搜索微信公众号文章，返回公众号、发布时间、摘要和原文链接"
+  default_prompt: "Use $wechatsearch to search WeChat public account articles for this topic."

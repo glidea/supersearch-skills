@@ -1,0 +1,4 @@
+interface:
+  display_name: "Super Search"
+  short_description: "聚合 Web、论坛、社媒、公众号与短视频来源，交叉验证事实和口碑"
+  default_prompt: "Use $supersearch to research this topic across all sources, or only the sources I specify."

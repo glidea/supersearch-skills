@@ -1,0 +1,4 @@
+interface:
+  display_name: "xsearch"
+  short_description: "Search focused sources with Grok citations"
+  default_prompt: "Use $xsearch to search this source for current information."

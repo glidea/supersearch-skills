@@ -1,0 +1,16 @@
+{
+  "name": "supersearch-skills",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "install:codex": "node scripts/install.mjs install",
+    "uninstall:codex": "node scripts/install.mjs uninstall",
+    "doctor": "node scripts/doctor.mjs",
+    "validate": "node scripts/validate-skills.mjs",
+    "test": "node scripts/test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

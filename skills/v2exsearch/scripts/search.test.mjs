@@ -1,0 +1,160 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import { search } from './search.mjs';
+
+test('restricts Web Search to v2ex.com', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  let requestBody;
+  globalThis.fetch = async (_url, options) => {
+    requestBody = JSON.parse(options.body);
+    return { ok: true, json: async () => ({ output: [{ type: 'message', content: [{ type: 'output_text', text: 'No results' }] }] }) };
+  };
+
+  await search('机场 稳定');
+
+  assert.deepEqual(requestBody.tools, [{
+    type: 'web_search',
+    filters: { allowed_domains: ['v2ex.com'] },
+  }]);
+  assert.match(requestBody.input[0].content, /site:v2ex\.com/);
+  assert.match(requestBody.input[0].content, /Read the topic and replies/);
+  assert.match(requestBody.input[0].content, /Summarize/);
+  assert.match(requestBody.input[0].content, /promotional content/);
+});
+
+test('requires an API key', async () => {
+  delete process.env.XAI_API_KEY;
+  await assert.rejects(search('机场 稳定'), /XAI_API_KEY is required/);
+});
+
+test('uses official base URL by default and supports override', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  delete process.env.XAI_BASE_URL;
+  const urls = [];
+  globalThis.fetch = async (url) => {
+    urls.push(url);
+    return { ok: true, json: async () => ({ output: [{ type: 'message', content: [{ type: 'output_text', text: 'No results' }] }] }) };
+  };
+  await search('机场 稳定');
+  process.env.XAI_BASE_URL = 'https://proxy.example/v1';
+  await search('机场 稳定');
+  delete process.env.XAI_BASE_URL;
+  assert.equal(urls[0], 'https://api.x.ai/v1/responses');
+  assert.equal(urls[1], 'https://proxy.example/v1/responses');
+});
+
+test('passes through citations returned by the proxy', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      output: [{ type: 'message', content: [{
+        type: 'output_text',
+        text: 'Summary',
+        annotations: [
+          { type: 'url_citation', url: 'https://www.v2ex.com/t/123', title: 'V2EX' },
+          { type: 'url_citation', url: 'https://spam.example/review', title: 'Spam' },
+        ],
+      }] }],
+      usage: { num_server_side_tools_used: 2 },
+    }),
+  });
+
+  const response = await search('机场 稳定');
+
+  assert.deepEqual(response.citations, [
+    { url: 'https://www.v2ex.com/t/123', title: 'V2EX' },
+    { url: 'https://spam.example/review', title: 'Spam' },
+  ]);
+  assert.equal(response.search_executed, true);
+});
+
+test('extracts V2EX topic links when citation annotations are missing', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      output: [{ type: 'message', content: [{
+        type: 'output_text',
+        text: 'Discussion: https://www.v2ex.com/t/1210082',
+      }] }],
+      usage: { num_server_side_tools_used: 1 },
+    }),
+  });
+
+  const response = await search('DeepSeek V4 Flash');
+
+  assert.deepEqual(response.citations, [{
+    url: 'https://www.v2ex.com/t/1210082',
+    title: 'V2EX topic',
+  }]);
+});
+
+test('rejects an empty upstream response', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  globalThis.fetch = async () => ({ ok: true, json: async () => ({ output: [] }) });
+
+  await assert.rejects(search('机场 稳定'), /empty response from upstream/);
+});
+
+test('passes through summaries when the proxy returns off-domain sources', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  globalThis.fetch = async () => ({
+    ok: true,
+    json: async () => ({
+      output: [{ type: 'message', content: [{
+        type: 'output_text',
+        text: 'External recommendation',
+        annotations: [{ type: 'url_citation', url: 'https://spam.example/review', title: 'Spam' }],
+      }] }],
+      usage: { num_server_side_tools_used: 1 },
+    }),
+  });
+
+  const response = await search('机场 稳定');
+
+  assert.equal(response.content, 'External recommendation');
+  assert.deepEqual(response.citations, [{ url: 'https://spam.example/review', title: 'Spam' }]);
+});
+
+test('retries transient request failures three times', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  let requestCount = 0;
+  globalThis.fetch = async () => {
+    requestCount += 1;
+    if (requestCount < 4) {
+      return { ok: false, status: 503, headers: { get: () => '0' }, json: async () => ({ error: { message: 'Unavailable' } }) };
+    }
+    return { ok: true, json: async () => ({
+      output: [{ type: 'message', content: [{
+        type: 'output_text',
+        text: 'Found discussion',
+        annotations: [{ type: 'url_citation', url: 'https://www.v2ex.com/t/123', title: 'Topic' }],
+      }] }],
+      usage: { num_server_side_tools_used: 1 },
+    }) };
+  };
+
+  const response = await search('DeepSeek V4 Flash');
+
+  assert.equal(requestCount, 4);
+  assert.equal(response.citations.length, 1);
+});
+
+test('retries client errors three times and reports the upstream response', async () => {
+  process.env.XAI_API_KEY = 'test-key';
+  let requestCount = 0;
+  globalThis.fetch = async () => {
+    requestCount += 1;
+    return {
+      ok: false,
+      status: 400,
+      headers: { get: () => '0' },
+      text: async () => '{"message":"Invalid request"}',
+    };
+  };
+
+  await assert.rejects(search('DeepSeek V4 Flash'), /HTTP 400:.*Invalid request/);
+  assert.equal(requestCount, 4);
+});
