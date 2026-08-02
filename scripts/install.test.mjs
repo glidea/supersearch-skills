@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readlink, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readlink, realpath, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -17,8 +17,8 @@ test('installs every repository skill into Codex', async () => {
     const result = await install({ repository, codexHome });
 
     assert.deepEqual(result.installed, ['alpha', 'beta']);
-    assert.equal(await readlink(path.join(codexHome, 'skills', 'alpha')), path.join(repository, 'skills', 'alpha'));
-    assert.equal(await readlink(path.join(codexHome, 'skills', 'beta')), path.join(repository, 'skills', 'beta'));
+    assert.equal(await realpath(path.join(codexHome, 'skills', 'alpha')), await realpath(path.join(repository, 'skills', 'alpha')));
+    assert.equal(await realpath(path.join(codexHome, 'skills', 'beta')), await realpath(path.join(repository, 'skills', 'beta')));
   } finally {
     await rm(root, { recursive: true, force: true });
   }
