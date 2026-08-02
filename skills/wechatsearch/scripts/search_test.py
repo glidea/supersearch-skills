@@ -9,10 +9,10 @@ SEARCH_HTML: str = """
 <html><body><ul class="news-list">
   <li id="sogou_vr_11002601_box_0">
     <a href="/link?url=abc&amp;type=2&amp;query=DeepSeek V4 Flash" id="sogou_vr_11002601_title_0">
-      <em>DeepSeek</em> V4 Flash 实测
+      <em>DeepSeek</em> V4 Flash Review
     </a>
-    <p id="sogou_vr_11002601_summary_0">速度很快，复杂任务仍有不足。</p>
-    <span class="all-time-y2">测试公众号</span>
+    <p id="sogou_vr_11002601_summary_0">Fast for simple work but weaker on complex tasks.</p>
+    <span class="all-time-y2">Test Account</span>
     <script>document.write(timeConvert('1785594723'))</script>
   </li>
 </ul></body></html>
@@ -33,10 +33,10 @@ class WeChatSearchTest(unittest.TestCase):
         results: list[dict[str, str]] = parse_search_results(SEARCH_HTML, 5)
 
         self.assertEqual(results, [{
-            "title": "DeepSeek V4 Flash 实测",
-            "account": "测试公众号",
+            "title": "DeepSeek V4 Flash Review",
+            "account": "Test Account",
             "published_at": "2026-08-01T14:32:03+00:00",
-            "summary": "速度很快，复杂任务仍有不足。",
+            "summary": "Fast for simple work but weaker on complex tasks.",
             "sogou_url": "https://weixin.sogou.com/link?url=abc&type=2&query=DeepSeek%20V4%20Flash",
         }])
 
@@ -50,7 +50,7 @@ class WeChatSearchTest(unittest.TestCase):
 
     def test_returns_browser_fallback_for_captcha(self) -> None:
         def fetch(_url: str) -> str:
-            return "访问过于频繁，请输入验证码"
+            return "\u8bbf\u95ee\u8fc7\u4e8e\u9891\u7e41\uff0c\u8bf7\u8f93\u5165\u9a8c\u8bc1\u7801"
 
         result: dict[str, object] = search("DeepSeek", fetch=fetch)
 

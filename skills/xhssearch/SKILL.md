@@ -1,43 +1,43 @@
 ---
 name: xhssearch
-description: 搜索小红书。用于查找消费决策、生活经验、产品口碑、教程、趋势和中文社区一手讨论，使用用户现有的浏览器登录态，并要求返回小红书原帖引用链接。
+description: Search Xiaohongshu for purchase decisions, life experience, product feedback, tutorials, trends, and firsthand Chinese community discussions using the user's existing browser session. Return source-post links.
 ---
 
 # Xiaohongshu Search
 
-## 搜索流程
+## Search workflow
 
-1. 加载并遵循 `$browser:control-in-app-browser`，使用 `https://www.xiaohongshu.com/` 选择浏览器。
-2. 优先接管已有的小红书标签页；没有时新建标签页。不要读取或导出 Cookie、Local Storage 或其他登录凭据。
-3. 在小红书页面搜索用户问题。根据问题补充一至两个自然的中文查询，不要批量枚举查询词。
-4. 打开“筛选”并选择“最多点赞”。该选项不可用或选择失败时继续使用综合排序，并在结果中说明。
-5. 从搜索结果提取标题、作者、发布时间、互动数和实际原帖链接。只使用当前页面 DOM 中真实存在的字段和链接。
-6. 选择 3 至 5 篇高赞且相关的代表性笔记。需要判断观点或经验时，打开原帖读取正文；只有评论能回答问题时才读取相关评论。
-7. 默认为最相关的 1 至 3 篇笔记保存本地封面；无法稳定保存页面封面时截取笔记封面区域。用户要求“关闭封面”“不显示封面”或“纯文本结果”时跳过，不生成封面文件。
-8. 合并重复内容，区分个人经验、营销内容和可验证事实。不要把点赞量当作结论正确性的证据。
-9. 完成后清理中间标签页。登录失效时请用户在选中的浏览器中登录后继续。
+1. Load and follow `$browser:control-in-app-browser`, selecting a browser for `https://www.xiaohongshu.com/`.
+2. Reuse an existing Xiaohongshu tab when possible, otherwise open one. Do not read or export cookies, Local Storage, or other login credentials.
+3. Search the user's question on Xiaohongshu. Add one or two natural Chinese queries when useful. Do not enumerate query variants in bulk.
+4. Open filters and select most-liked sorting. If unavailable or unsuccessful, continue with comprehensive sorting and state the actual mode.
+5. Extract the title, author, publication time, engagement count, and actual source-post URL. Use only fields and links present in the current page DOM.
+6. Select three to five highly liked, relevant, representative notes. Open the post when its position or experience matters. Read comments only when they are necessary to answer the question.
+7. By default, save local covers for the one to three most relevant notes. If page covers cannot be saved reliably, capture the note's cover area. Skip cover generation when the user requests no covers or text-only results.
+8. Merge duplicate content and distinguish personal experience, marketing, and verifiable facts. Do not treat like counts as evidence of correctness.
+9. Close intermediate tabs when finished. If the login session has expired, ask the user to log in through the selected browser and continue.
 
-## 接口约束
+## Interface constraints
 
-- 不调用未公开的私有搜索 API，不复制浏览器凭据到脚本或环境变量。
-- 使用浏览器页面本身的登录态和搜索能力。
-- 遇到验证码时遵循浏览器 skill 的确认流程，不绕过验证码。
+- Do not call undocumented private search APIs or copy browser credentials into scripts or environment variables.
+- Use the browser page's own login session and search capability.
+- Follow the browser skill's confirmation flow for CAPTCHAs. Do not bypass them.
 
-## 输出格式
+## Output format
 
-返回：
+Return:
 
-- `search_executed`：是否完成真实搜索。
-- `sort`：实际使用的排序方式。
-- `summary`：基于搜索结果的简洁结论。
-- `results`：代表性笔记，每项包含 `title`、`author`、`published_at`、`engagement`、`url`、`cover_path` 和 `note`。关闭封面时省略 `cover_path`。
+- `search_executed`: whether a real search completed.
+- `sort`: the sort mode actually used.
+- `summary`: a concise conclusion based on search results.
+- `results`: representative notes containing `title`, `author`, `published_at`, `engagement`, `url`, `cover_path`, and `note`. Omit `cover_path` when covers are disabled.
 
-封面必须使用绝对本地路径，并让图片链接到原帖：
+Use absolute local paths for covers and link each image to its source post:
 
 ```markdown
-[![笔记标题](/absolute/path/cover.jpg)](https://www.xiaohongshu.com/explore/123)
+[![Note title](/absolute/path/cover.jpg)](https://www.xiaohongshu.com/explore/123)
 ```
 
-不要直接嵌入小红书 CDN 图片地址。
+Do not embed Xiaohongshu CDN image URLs directly.
 
-仅引用浏览器实际打开或在搜索结果中实际出现的小红书链接。搜索未执行成功时将 `search_executed` 设为 `false` 并说明原因，不生成链接。
+Cite only Xiaohongshu links actually opened by the browser or present in search results. When search fails, set `search_executed` to `false`, state the reason, and do not generate links.

@@ -177,7 +177,11 @@ def search(
 ) -> SearchResponse:
     get: Callable[[str], str] = fetch or _http_fetcher()
     source: str = _fetch_with_retry(get, SEARCH_URL + urllib.parse.quote(query))
-    blocked_markers: tuple[str, ...] = ("请输入验证码", "访问过于频繁", "antispider")
+    blocked_markers: tuple[str, ...] = (
+        "\u8bf7\u8f93\u5165\u9a8c\u8bc1\u7801",
+        "\u8bbf\u95ee\u8fc7\u4e8e\u9891\u7e41",
+        "antispider",
+    )
     blocked: bool = any(marker in source for marker in blocked_markers)
     if blocked:
         return {"search_executed": False, "fallback": "browser", "results": []}

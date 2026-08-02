@@ -1,4 +1,4 @@
 interface:
   display_name: "Douyin Search"
-  short_description: "使用登录态搜索抖音高赞视频并提取原帖链接与真实用户反馈"
+  short_description: "Search popular Douyin videos using the browser session"
   default_prompt: "Use $douyinsearch to search Douyin for highly liked videos about this topic."

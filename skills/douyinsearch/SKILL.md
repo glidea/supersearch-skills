@@ -1,43 +1,43 @@
 ---
 name: douyinsearch
-description: 搜索抖音。用于查找热门视频、产品口碑、教程、趋势、实测和中文短视频社区反馈，使用用户现有的浏览器登录态，默认优先最多点赞排序，并要求返回抖音原视频链接。
+description: Search Douyin for popular videos, product feedback, tutorials, trends, hands-on tests, and Chinese short-video community reactions using the user's existing browser session. Prefer most-liked sorting and return original video links.
 ---
 
 # Douyin Search
 
-## 搜索流程
+## Search workflow
 
-1. 加载并遵循 `$browser:control-in-app-browser`，为 `https://www.douyin.com/` 选择浏览器。
-2. 优先接管已有的抖音标签页；没有时新建标签页。不要读取或导出 Cookie、Local Storage 或其他登录凭据。
-3. 在抖音页面搜索用户问题。根据问题补充一至两个自然的中文查询，不要批量枚举查询词。
-4. 打开“筛选”并选择“最多点赞”。该选项不可用或选择失败时继续使用综合排序，并在结果中说明。
-5. 提取标题、作者、发布时间、点赞数、时长和实际原视频链接。需要打开结果才能取得原视频链接时，逐项打开代表性结果并记录最终 URL。
-6. 选择 3 至 5 条高赞且相关的视频。需要判断观点或经验时，打开视频详情读取完整文案；只有评论能回答问题时才读取相关评论。
-7. 默认对最相关的 1 至 3 条视频截取清晰封面并保存为本地图片。用户要求“关闭封面”“不显示封面”或“纯文本结果”时跳过截图，不生成封面文件。
-8. 合并重复内容，区分个人经验、营销内容和可验证事实。不要把点赞量当作结论正确性的证据。
-9. 完成后清理中间标签页。登录失效时请用户在选中的浏览器中登录后继续。
+1. Load and follow `$browser:control-in-app-browser`, selecting a browser for `https://www.douyin.com/`.
+2. Reuse an existing Douyin tab when possible, otherwise open one. Do not read or export cookies, Local Storage, or other login credentials.
+3. Search the user's question on Douyin. Add one or two natural Chinese queries when useful. Do not enumerate query variants in bulk.
+4. Open filters and select most-liked sorting. If unavailable or unsuccessful, continue with comprehensive sorting and state the actual mode.
+5. Extract the title, author, publication time, like count, duration, and actual original video URL. When opening a result is required to obtain the URL, open representative results individually and record the final URL.
+6. Select three to five highly liked and relevant videos. Open video details for complete text when opinions or experience matter. Read comments only when they are necessary to answer the question.
+7. By default, capture clear local covers for the one to three most relevant videos. Skip screenshots and cover generation when the user requests no covers or text-only results.
+8. Merge duplicate content and distinguish personal experience, marketing, and verifiable facts. Do not treat like counts as evidence of correctness.
+9. Close intermediate tabs when finished. If the login session has expired, ask the user to log in through the selected browser and continue.
 
-## 接口约束
+## Interface constraints
 
-- 不调用未公开的私有搜索 API，不复制浏览器凭据到脚本或环境变量。
-- 使用浏览器页面本身的登录态和搜索能力。
-- 遇到验证码时遵循浏览器 skill 的确认流程，不绕过验证码。
+- Do not call undocumented private search APIs or copy browser credentials into scripts or environment variables.
+- Use the browser page's own login session and search capability.
+- Follow the browser skill's confirmation flow for CAPTCHAs. Do not bypass them.
 
-## 输出格式
+## Output format
 
-返回：
+Return:
 
-- `search_executed`：是否完成真实搜索。
-- `sort`：实际使用的排序方式。
-- `summary`：基于搜索结果的简洁结论。
-- `results`：代表性视频，每项包含 `title`、`author`、`published_at`、`likes`、`duration`、`url`、`cover_path` 和 `note`。关闭封面时省略 `cover_path`。
+- `search_executed`: whether a real search completed.
+- `sort`: the sort mode actually used.
+- `summary`: a concise conclusion based on search results.
+- `results`: representative videos containing `title`, `author`, `published_at`, `likes`, `duration`, `url`, `cover_path`, and `note`. Omit `cover_path` when covers are disabled.
 
-封面必须使用绝对本地路径，并让图片链接到原视频：
+Use absolute local paths for covers and link each image to its source video:
 
 ```markdown
-[![视频标题](/absolute/path/cover.jpg)](https://www.douyin.com/video/123)
+[![Video title](/absolute/path/cover.jpg)](https://www.douyin.com/video/123)
 ```
 
-不要直接嵌入抖音 CDN 图片或视频地址。
+Do not embed Douyin CDN image or video URLs directly.
 
-仅引用浏览器实际打开或在搜索结果中实际出现的抖音链接。搜索未执行成功时将 `search_executed` 设为 `false` 并说明原因，不生成链接。
+Cite only Douyin links actually opened by the browser or present in search results. When search fails, set `search_executed` to `false`, state the reason, and do not generate links.

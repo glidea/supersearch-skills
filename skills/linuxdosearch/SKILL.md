@@ -1,14 +1,14 @@
 ---
 name: linuxdosearch
-description: 搜索 linux.do。用于查找国内前沿 AI 工具、实践经验、优惠信息和社区一手讨论。仅搜索 linux.do，并要求返回原帖引用链接。
+description: Search linux.do for Chinese community discussions about emerging AI tools, practical experience, promotions, and firsthand reports. Search only linux.do and return source-post links.
 ---
 
 # Linux DO Search
 
-运行：
+Run:
 
 ```bash
-node scripts/search.mjs "搜索内容"
+node scripts/search.mjs "search query"
 ```
 
-仅依据返回的 `citations` 提供引用。若 `search_executed` 为 `false`，明确说明上游未执行搜索，不要把模型生成的链接当作可靠引用。
+Use only returned `citations` as sources. When `search_executed` is `false`, state that the upstream search did not run and do not treat model-generated links as reliable citations.

@@ -11,7 +11,7 @@ test('restricts Web Search to linux.do', async () => {
     return { ok: true, json: async () => ({ output: [{ type: 'message', content: [{ type: 'output_text', text: 'No results' }] }] }) };
   };
 
-  await search('机场 稳定');
+  await search('proxy stability');
 
   assert.deepEqual(requestBody.tools, [{
     type: 'web_search',
@@ -25,7 +25,7 @@ test('restricts Web Search to linux.do', async () => {
 
 test('requires an API key', async () => {
   delete process.env.XAI_API_KEY;
-  await assert.rejects(search('机场 稳定'), /XAI_API_KEY is required/);
+  await assert.rejects(search('proxy stability'), /XAI_API_KEY is required/);
 });
 
 test('uses official base URL by default and supports override', async () => {
@@ -36,9 +36,9 @@ test('uses official base URL by default and supports override', async () => {
     urls.push(url);
     return { ok: true, json: async () => ({ output: [{ type: 'message', content: [{ type: 'output_text', text: 'No results' }] }] }) };
   };
-  await search('机场 稳定');
+  await search('proxy stability');
   process.env.XAI_BASE_URL = 'https://proxy.example/v1';
-  await search('机场 稳定');
+  await search('proxy stability');
   delete process.env.XAI_BASE_URL;
   assert.equal(urls[0], 'https://api.x.ai/v1/responses');
   assert.equal(urls[2], 'https://proxy.example/v1/responses');
@@ -61,7 +61,7 @@ test('passes through citations returned by the proxy', async () => {
     }),
   });
 
-  const response = await search('机场 稳定');
+  const response = await search('proxy stability');
 
   assert.deepEqual(response.citations, [
     { url: 'https://linux.do/t/topic/123', title: 'Linux DO' },
@@ -95,7 +95,7 @@ test('rejects an empty upstream response', async () => {
   process.env.XAI_API_KEY = 'test-key';
   globalThis.fetch = async () => ({ ok: true, json: async () => ({ output: [] }) });
 
-  await assert.rejects(search('机场 稳定'), /empty response from upstream/);
+  await assert.rejects(search('proxy stability'), /empty response from upstream/);
 });
 
 test('retries with a broader query when the first search has no citations', async () => {
@@ -119,7 +119,7 @@ test('retries with a broader query when the first search has no citations', asyn
     }) };
   };
 
-  const response = await search('DeepSeek V4 Flash 风评 实测 体验 编程 推理');
+  const response = await search('DeepSeek V4 Flash reviews coding reasoning');
 
   assert.equal(requestBodies.length, 2);
   assert.match(requestBodies[1].input[0].content, /Query: site:linux\.do DeepSeek V4 Flash$/);
@@ -140,7 +140,7 @@ test('passes through summaries when the proxy returns off-domain sources', async
     }),
   });
 
-  const response = await search('机场 稳定');
+  const response = await search('proxy stability');
 
   assert.equal(response.content, 'External recommendation');
   assert.deepEqual(response.citations, [{ url: 'https://spam.example/review', title: 'Spam' }]);

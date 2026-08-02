@@ -25,6 +25,7 @@ The agent installs the repository at `~/.codex/repos/supersearch-skills` and lin
 | `wechatsearch` | WeChat via Sogou | Python 3.9+; Browser plugin for fallback |
 | `xhssearch` | Xiaohongshu | Codex Browser plugin and user login |
 | `douyinsearch` | Douyin | Codex Browser plugin and user login |
+| `tgsearch` | Telegram | Telegram MCP and Telegram account session |
 
 The Browser plugin is optional. Without it, Web, Linux.do, V2EX, Reddit, X, and direct Sogou WeChat search remain available.
 

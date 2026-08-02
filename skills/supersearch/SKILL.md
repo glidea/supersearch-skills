@@ -1,36 +1,36 @@
 ---
 name: supersearch
-description: 聚合 Web、Linux.do、V2EX、小红书、微信公众号、抖音、Reddit 和 X 的搜索结果。默认搜索全部来源，也支持用户指定一个或多个来源。用于跨官方资料、中英文社区经验与实时舆情进行通用调研、事实核查、产品比较、技术选型、故障排查或热点追踪，并要求提供一手引用链接的任务。
+description: Aggregate Web, Linux.do, V2EX, Xiaohongshu, WeChat Official Accounts, Douyin, Telegram, Reddit, and X. Search every source by default or only user-selected sources for research, fact-checking, product comparison, technology choices, troubleshooting, and trend tracking with primary-source links.
 ---
 
 # Super Search
 
-## 搜索流程
+## Search workflow
 
-1. 提炼核心问题、时效范围和需要验证的关键点。
-2. 为中文社区使用中文查询，为 Reddit 和 X 补充自然的英文查询。不要只做逐字翻译。
-3. 用户未指定来源时，并行调用 `$linuxdosearch`、`$v2exsearch`、`$xhssearch`、`$wechatsearch`、`$douyinsearch`、`$redditsearch`、`$xsearch` 与内置 Web 搜索，不跳过来源。用户指定来源时仅调用指定来源。
-   Linux.do、V2EX 或 Reddit 的专用搜索没有返回 citation 时，立即用内置 Web 分别搜索 `site:linux.do "核心名称"`、`site:v2ex.com/t "核心名称"`、`site:reddit.com "核心名称"`。专用搜索与 Web 结果冲突时，以能打开的一手帖子为准。
-4. Web 搜索优先官方文档、项目仓库、论文、公告和当事方原文。社区搜索用于发现实践经验、争议、故障和用户反馈。
-5. 涉及实时动态时，为 X 传入用户给定的 `--from`、`--to`。用户未给时间范围时，根据问题选择合理范围并明确写出。
-6. 合并重复事件和转载。追溯到最早或最权威的一手来源，不用聚合页替代原文。
-7. 对照不同来源。区分已确认事实、社区观点和无法确认的信息，不把热度当成事实。
-8. 默认展示抖音和小红书最相关结果的本地封面，总计不超过 3 张。封面图片链接到对应原帖。用户要求“关闭封面”“不显示封面”或“纯文本结果”时通知相关来源跳过封面，并且最终回复不展示封面。
+1. Identify the core question, time range, and claims that need verification.
+2. Use Chinese queries for Chinese communities and add natural English queries for Reddit and X. Do not merely translate word for word.
+3. When the user does not specify sources, run `$linuxdosearch`, `$v2exsearch`, `$xhssearch`, `$wechatsearch`, `$douyinsearch`, `$tgsearch`, `$redditsearch`, `$xsearch`, and built-in Web search in parallel without skipping sources. When the user specifies sources, call only those sources.
+   When Linux.do, V2EX, or Reddit returns no citation, immediately run built-in Web searches for `site:linux.do "core name"`, `site:v2ex.com/t "core name"`, or `site:reddit.com "core name"`. If dedicated and Web results conflict, prefer an accessible primary post.
+4. For Web search, prefer official documentation, project repositories, papers, announcements, and primary statements. Use community search to find practical experience, disputes, failures, and user feedback.
+5. For real-time topics, pass the user's `--from` and `--to` values to X. When no range is given, choose a reasonable range and state it.
+6. Merge duplicate events and reposts. Trace claims to the earliest or most authoritative primary source instead of citing aggregators.
+7. Compare sources. Distinguish confirmed facts, community opinions, and unverified information. Do not treat popularity as evidence.
+8. By default, show local cover images for the most relevant Douyin and Xiaohongshu results, with no more than three images total. Link each image to its source post. When the user requests no covers or text-only results, tell those sources to skip covers and omit covers from the final answer.
 
-## 引用规则
+## Citation rules
 
-- Web 结果仅引用 Web 工具实际返回的页面。
-- Linux.do、V2EX 和 Reddit 优先引用各自输出中的 `citations`；触发内置 Web 兜底时，可以引用 Web 实际返回的对应平台帖子。小红书、微信公众号和抖音仅引用各自 `results.url`，微信原文无法打开时可引用同一结果的 `sogou_url`。
-- X 有 `citations` 时仅引用其中链接。没有 `citations` 但 `search_executed` 为 `true` 时可以归纳 `content`，必须标记“上游未提供可引用原帖”，不得表述为没有讨论。
-- 任一社区结果的 `search_executed` 为 `false` 时，明确标记该来源未执行成功，不使用其生成链接。
-- 每个重要结论就近附链接。没有可靠来源时直接说明未找到证据。
+- Cite only pages actually returned by the Web tool.
+- Prefer `citations` returned by Linux.do, V2EX, and Reddit. When built-in Web fallback runs, cite platform posts actually returned by Web. For Xiaohongshu, WeChat, and Douyin, cite only each result's `url`; when a WeChat original cannot be opened, use `sogou_url` from the same result. For Telegram, prefer original message links returned by `get_message_link`; otherwise provide the chat name, timestamp, and message ID.
+- When X returns `citations`, cite only those links. When `search_executed` is `true` without citations, summarize `content` and state that the upstream service provided no citable source posts. Do not describe it as no discussion.
+- When any community result returns `search_executed: false`, mark that source as not successfully searched and do not use generated links from it.
+- Place links next to important claims. State when no reliable evidence was found.
 
-## 输出格式
+## Output format
 
-先直接回答问题，再按需列出：
+Answer directly first, then include as needed:
 
-- **已确认事实**：官方或多个独立来源支持的结论。
-- **社区观察**：按 Linux.do、V2EX、小红书、微信公众号、抖音、Reddit、X 归纳有代表性的经验和分歧。
-- **不确定性**：冲突、样本偏差、过期信息和搜索失败。
+- **Confirmed facts**: conclusions supported by official or multiple independent sources.
+- **Community observations**: representative experience and disagreements from Linux.do, V2EX, Xiaohongshu, WeChat, Douyin, Telegram, Reddit, and X.
+- **Uncertainty**: conflicts, sampling bias, stale information, and search failures.
 
-保持简洁。不要逐来源堆砌搜索结果，也不要为了覆盖所有来源而加入无关内容。
+Stay concise. Do not dump results source by source or include irrelevant material merely to cover every source.

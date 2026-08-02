@@ -1,4 +1,4 @@
 interface:
   display_name: "xhssearch"
-  short_description: "使用浏览器登录态搜索小红书笔记、正文和评论并返回原帖引用链接"
+  short_description: "Search Xiaohongshu posts and comments using the browser session"
   default_prompt: "Use $xhssearch to search Xiaohongshu and cite original notes."

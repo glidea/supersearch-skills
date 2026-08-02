@@ -1,29 +1,29 @@
 ---
 name: supersearch-fast
-description: 快速聚合内置 Web、Linux.do、X、Reddit 和 V2EX 的搜索结果。默认搜索这五个来源，也支持用户指定其中一个或多个来源。用于快速调研、事实核查、技术选型、故障排查、产品口碑或实时舆情，不搜索小红书、微信公众号和抖音。
+description: Quickly aggregate built-in Web, Linux.do, X, Reddit, and V2EX search results. Search all five sources by default or only user-selected sources for research, fact-checking, technology choices, troubleshooting, product feedback, and real-time sentiment. Exclude Xiaohongshu, WeChat, Douyin, and Telegram.
 ---
 
 # Super Search Fast
 
-## 搜索流程
+## Search workflow
 
-1. 提炼核心问题、时效范围和需要验证的关键点。
-2. 为中文社区使用中文查询，为 Reddit 和 X 补充自然英文查询。
-3. 用户未指定来源时，并行调用 `$linuxdosearch`、`$v2exsearch`、`$redditsearch`、`$xsearch` 与内置 Web 搜索。不要调用小红书、微信公众号和抖音。用户指定来源时仅调用指定来源。
-4. Web 搜索优先官方文档、项目仓库、论文、公告和当事方原文。
-5. 每个专用搜索脚本遇到错误时默认重试 3 次。重试后仍失败，立即用内置 Web 回退搜索：Linux.do 使用 `site:linux.do "核心名称"`，V2EX 使用 `site:v2ex.com/t "核心名称"`，Reddit 使用 `site:reddit.com "核心名称"`，X 使用 `site:x.com "核心名称"`。专用搜索没有返回 citation 时也执行对应的 Web 回退。不要把专用搜索失败或无 citation 表述为该平台没有讨论。
-6. 涉及实时动态时，为 X 传入用户给定的 `--from`、`--to`。用户未给时间范围时，根据问题选择合理范围并明确写出。
-7. 合并重复事件和转载，优先引用能打开的一手页面。区分已确认事实、社区观点和无法确认的信息。
+1. Identify the core question, time range, and claims that need verification.
+2. Use Chinese queries for Chinese communities and add natural English queries for Reddit and X.
+3. When the user does not specify sources, run `$linuxdosearch`, `$v2exsearch`, `$redditsearch`, `$xsearch`, and built-in Web search in parallel. Do not call Xiaohongshu, WeChat, Douyin, or Telegram. When the user specifies sources, call only those sources.
+4. For Web search, prefer official documentation, project repositories, papers, announcements, and primary statements.
+5. Retry each dedicated search script three times on error. If it still fails, immediately fall back to built-in Web search using `site:linux.do "core name"`, `site:v2ex.com/t "core name"`, `site:reddit.com "core name"`, or `site:x.com "core name"`. Also run the matching Web fallback when a dedicated search returns no citation. Never describe a failed search or missing citations as no discussion on that platform.
+6. For real-time topics, pass the user's `--from` and `--to` values to X. When no range is given, choose a reasonable range and state it.
+7. Merge duplicate events and reposts, prefer accessible primary pages, and distinguish confirmed facts, community opinions, and unverified information.
 
-## 引用规则
+## Citation rules
 
-- Web 结果仅引用 Web 工具实际返回的页面。
-- 专用搜索有 `citations` 时仅引用其中链接。
-- X 没有 `citations` 但 `search_executed` 为 `true` 时可以归纳 `content`，必须标记“上游未提供可引用原帖”。
-- 任一专用搜索的 `search_executed` 为 `false` 时，明确标记该来源未执行成功。
-- 任一专用搜索最终失败时，必须报告来源、HTTP 状态或错误类型以及上游返回的错误信息，并说明已回退到 Web 搜索。
-- 每个重要结论就近附链接。没有可靠来源时直接说明未找到证据。
+- Cite only pages actually returned by the Web tool.
+- When a dedicated search returns `citations`, cite only those links.
+- When X returns `search_executed: true` without `citations`, summarize `content` and state that the upstream service provided no citable source posts.
+- When any dedicated search returns `search_executed: false`, mark that source as not successfully searched.
+- When a dedicated search ultimately fails, report the source, HTTP status or error type, the upstream error message, and that Web fallback was used.
+- Place links next to important claims. State when no reliable evidence was found.
 
-## 输出格式
+## Output format
 
-先直接回答问题，再简洁归纳事实、社区共识、分歧和不确定性。不要逐来源机械堆砌结果。
+Answer directly first, then concisely summarize facts, community consensus, disagreements, and uncertainty. Do not mechanically list results source by source.

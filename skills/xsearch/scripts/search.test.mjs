@@ -11,7 +11,7 @@ test('uses X Search with a date range', async () => {
     return { ok: true, json: async () => ({ output: [{ type: 'message', content: [{ type: 'output_text', text: 'No results' }] }] }) };
   };
 
-  await search('机场 稳定', { fromDate: '2026-07-01', toDate: '2026-08-01' });
+  await search('proxy stability', { fromDate: '2026-07-01', toDate: '2026-08-01' });
 
   assert.deepEqual(requestBody.tools, [{
     type: 'x_search',
@@ -25,14 +25,14 @@ test('uses X Search with a date range', async () => {
 
 test('parses CLI date filters', () => {
   assert.deepEqual(
-    parseArgs(['机场', '稳定', '--from', '2026-07-01', '--to', '2026-08-01']),
-    { query: '机场 稳定', fromDate: '2026-07-01', toDate: '2026-08-01' },
+    parseArgs(['proxy', 'stability', '--from', '2026-07-01', '--to', '2026-08-01']),
+    { query: 'proxy stability', fromDate: '2026-07-01', toDate: '2026-08-01' },
   );
 });
 
 test('requires an API key', async () => {
   delete process.env.XAI_API_KEY;
-  await assert.rejects(search('机场 稳定'), /XAI_API_KEY is required/);
+  await assert.rejects(search('proxy stability'), /XAI_API_KEY is required/);
 });
 
 test('uses official base URL by default and supports override', async () => {
@@ -43,9 +43,9 @@ test('uses official base URL by default and supports override', async () => {
     urls.push(url);
     return { ok: true, json: async () => ({ output: [{ type: 'message', content: [{ type: 'output_text', text: 'No results' }] }] }) };
   };
-  await search('机场 稳定');
+  await search('proxy stability');
   process.env.XAI_BASE_URL = 'https://proxy.example/v1';
-  await search('机场 稳定');
+  await search('proxy stability');
   delete process.env.XAI_BASE_URL;
   assert.equal(urls[0], 'https://api.x.ai/v1/responses');
   assert.equal(urls[2], 'https://proxy.example/v1/responses');
@@ -61,7 +61,7 @@ test('detects search execution from proxy usage metadata', async () => {
     }),
   });
 
-  const response = await search('机场 稳定');
+  const response = await search('proxy stability');
 
   assert.equal(response.search_executed, true);
 });
@@ -70,7 +70,7 @@ test('rejects an empty upstream response', async () => {
   process.env.XAI_API_KEY = 'test-key';
   globalThis.fetch = async () => ({ ok: true, json: async () => ({ output: [] }) });
 
-  await assert.rejects(search('机场 稳定'), /empty response from upstream/);
+  await assert.rejects(search('proxy stability'), /empty response from upstream/);
 });
 
 test('extracts X post links and removes internal render tags', async () => {
@@ -87,7 +87,7 @@ test('extracts X post links and removes internal render tags', async () => {
     }),
   });
 
-  const response = await search('机场 稳定');
+  const response = await search('proxy stability');
 
   assert.deepEqual(response.citations, [{ url: 'https://x.com/user/status/123', title: 'X post' }]);
   assert.equal(response.content, 'Result https://x.com/user/status/123');
