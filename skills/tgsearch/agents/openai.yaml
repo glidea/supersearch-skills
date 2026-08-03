@@ -1,4 +1,0 @@
-interface:
-  display_name: "Telegram Search"
-  short_description: "Search Telegram chats, groups, channels, and public messages"
-  default_prompt: "Use $tgsearch to search Telegram for this topic."

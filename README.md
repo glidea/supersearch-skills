@@ -16,16 +16,16 @@ The agent installs the repository at `~/.codex/repos/supersearch-skills` and lin
 
 | Skill | Source | Requirement |
 | --- | --- | --- |
-| `supersearch` | All sources | Codex built-in Web search; optional requirements below |
-| `supersearch-fast` | Web, Linux.do, X, Reddit, V2EX | Codex built-in Web search and xAI API key for specialized search |
-| `linuxdosearch` | Linux.do | Node.js 18+, `XAI_API_KEY` |
-| `v2exsearch` | V2EX | Node.js 18+, `XAI_API_KEY` |
-| `redditsearch` | Reddit | Node.js 18+, `XAI_API_KEY` |
-| `xsearch` | X | Node.js 18+, `XAI_API_KEY` |
-| `wechatsearch` | WeChat via Sogou | Python 3.9+; Browser plugin for fallback |
-| `xhssearch` | Xiaohongshu | Codex Browser plugin and user login |
-| `douyinsearch` | Douyin | Codex Browser plugin and user login |
-| `tgsearch` | Telegram | Telegram MCP and Telegram account session |
+| `super-search` | All sources | Codex built-in Web search; optional requirements below |
+| `super-search-fast` | Web, Linux.do, X, Reddit, V2EX | Codex built-in Web search and xAI API key for specialized search |
+| `linuxdo-search` | Linux.do | Node.js 18+, `XAI_API_KEY` |
+| `v2ex-search` | V2EX | Node.js 18+, `XAI_API_KEY` |
+| `reddit-search` | Reddit | Node.js 18+, `XAI_API_KEY` |
+| `x-search` | X | Node.js 18+, `XAI_API_KEY` |
+| `wechat-search` | WeChat via Sogou | Python 3.9+; Browser plugin for fallback |
+| `xiaohongshu-search` | Xiaohongshu | Codex Browser plugin and user login |
+| `douyin-search` | Douyin | Codex Browser plugin and user login |
+| `telegram-search` | Telegram | Telegram MCP and Telegram account session |
 
 The Browser plugin is optional. Without it, Web, Linux.do, V2EX, Reddit, X, and direct Sogou WeChat search remain available.
 

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Douyin Search"
-  short_description: "Search popular Douyin videos using the browser session"
-  default_prompt: "Use $douyinsearch to search Douyin for highly liked videos about this topic."

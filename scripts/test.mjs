@@ -25,4 +25,4 @@ const pythonCommands = process.platform === 'win32'
   : [['python3', []], ['python', []]];
 const python = pythonCommands.find(([command, args]) => run(command, [...args, '--version']));
 if (!python) throw new Error('Python 3.9+ is required');
-if (!run(python[0], [...python[1], '-m', 'unittest', 'discover', '-s', 'skills/wechatsearch/scripts', '-p', '*_test.py'])) process.exit(1);
+if (!run(python[0], [...python[1], '-m', 'unittest', 'discover', '-s', 'skills/wechat-search/scripts', '-p', '*_test.py'])) process.exit(1);

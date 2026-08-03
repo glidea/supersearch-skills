@@ -1,0 +1,4 @@
+interface:
+  display_name: "Linux.do Search"
+  short_description: "Search focused sources with Grok citations"
+  default_prompt: "Use $linuxdo-search to search this source for current information."

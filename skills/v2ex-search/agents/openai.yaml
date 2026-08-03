@@ -1,0 +1,4 @@
+interface:
+  display_name: "V2EX Search"
+  short_description: "Search focused sources with Grok citations"
+  default_prompt: "Use $v2ex-search to search this source for current information."

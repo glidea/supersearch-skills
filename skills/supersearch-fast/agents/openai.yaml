@@ -1,4 +1,0 @@
-interface:
-  display_name: "Super Search Fast"
-  short_description: "Quickly aggregate Web, Linux.do, X, Reddit, and V2EX"
-  default_prompt: "Use $supersearch-fast to quickly research this topic across Web, Linux.do, X, Reddit, and V2EX."

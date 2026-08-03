@@ -1,4 +1,0 @@
-interface:
-  display_name: "redditsearch"
-  short_description: "Search focused sources with Grok citations"
-  default_prompt: "Use $redditsearch to search this source for current information."

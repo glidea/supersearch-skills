@@ -1,0 +1,4 @@
+interface:
+  display_name: "Xiaohongshu Search"
+  short_description: "Search Xiaohongshu posts and comments using the browser session"
+  default_prompt: "Use $xiaohongshu-search to search Xiaohongshu and cite original notes."

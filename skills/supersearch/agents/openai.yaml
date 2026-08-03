@@ -1,4 +1,0 @@
-interface:
-  display_name: "Super Search"
-  short_description: "Aggregate Web, forum, social, WeChat, and short-video sources"
-  default_prompt: "Use $supersearch to research this topic across all sources, or only the sources I specify."
