@@ -41,3 +41,13 @@ Use absolute local paths for covers and link each image to its source post:
 Do not embed Xiaohongshu CDN image URLs directly.
 
 Cite only Xiaohongshu links actually opened by the browser or present in search results. When search fails, set `search_executed` to `false`, state the reason, and do not generate links.
+
+End every response with a `## References` section. Keep links next to supported claims and repeat the used links here, deduplicated and comma-separated on one website line:
+
+```markdown
+## References
+
+Xiaohongshu: [result title](https://example.com), [result title](https://example.com)
+```
+
+List only links actually used in the answer. When none exist, write `No citable sources.` below the heading.

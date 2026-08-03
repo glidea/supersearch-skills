@@ -34,3 +34,14 @@ Answer directly first, then include as needed:
 - **Uncertainty**: conflicts, sampling bias, stale information, and search failures.
 
 Stay concise. Do not dump results source by source or include irrelevant material merely to cover every source.
+
+End every response with a `## References` section. Keep links next to supported claims and repeat every used link in this final section. Use one line per website, preserve the result title, deduplicate links, and separate multiple links with commas. Use the website or platform name as the label, not `Web`:
+
+```markdown
+## References
+
+Linux DO: [result title](https://example.com), [result title](https://example.com)
+OpenAI: [result title](https://example.com)
+```
+
+Include only websites with references actually used in the answer. For Telegram private messages without shareable links, use `Telegram: chat name / timestamp / message ID`. When no citable source exists, write `No citable sources.` below the heading.

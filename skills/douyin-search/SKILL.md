@@ -41,3 +41,13 @@ Use absolute local paths for covers and link each image to its source video:
 Do not embed Douyin CDN image or video URLs directly.
 
 Cite only Douyin links actually opened by the browser or present in search results. When search fails, set `search_executed` to `false`, state the reason, and do not generate links.
+
+End every response with a `## References` section. Keep links next to supported claims and repeat the used links here, deduplicated and comma-separated on one website line:
+
+```markdown
+## References
+
+Douyin: [result title](https://example.com), [result title](https://example.com)
+```
+
+List only links actually used in the answer. When none exist, write `No citable sources.` below the heading.

@@ -23,3 +23,13 @@ description: Search Telegram messages visible to the configured account, includi
 ## Output format
 
 Answer the question first, then list concise supporting results. Include the source, timestamp, summary, and original message link for each result, or the message ID when no link is available.
+
+End every response with a `## References` section. Keep links next to supported claims and repeat the used links here, deduplicated and comma-separated on one website line:
+
+```markdown
+## References
+
+Telegram: [result title](https://example.com), [result title](https://example.com)
+```
+
+When a private result has no shareable link, use `Telegram: chat name / timestamp / message ID`. List only references actually used in the answer. When none exist, write `No citable sources.` below the heading.

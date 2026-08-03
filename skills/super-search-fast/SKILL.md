@@ -27,3 +27,14 @@ description: Quickly aggregate built-in Web, Linux.do, X, Reddit, and V2EX searc
 ## Output format
 
 Answer directly first, then concisely summarize facts, community consensus, disagreements, and uncertainty. Do not mechanically list results source by source.
+
+End every response with a `## References` section. Keep links next to supported claims and repeat every used link in this final section. Use one line per website, preserve the result title, deduplicate links, and separate multiple links with commas. Use the website or platform name as the label, not `Web`:
+
+```markdown
+## References
+
+Linux DO: [result title](https://example.com), [result title](https://example.com)
+OpenAI: [result title](https://example.com)
+```
+
+Include only websites with references actually used in the answer. When no citable source exists, write `No citable sources.` below the heading.
