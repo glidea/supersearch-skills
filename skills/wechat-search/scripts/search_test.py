@@ -90,6 +90,28 @@ class WeChatSearchTest(unittest.TestCase):
         self.assertEqual(request_count, 4)
         self.assertEqual(result["search_executed"], True)
 
+    @patch("search.time.sleep")
+    def test_retries_forbidden_responses_three_times(self, _sleep: object) -> None:
+        request_count: int = 0
+
+        def fetch(_url: str) -> str:
+            nonlocal request_count
+            request_count += 1
+            if request_count < 4:
+                raise urllib.error.HTTPError(
+                    "https://weixin.sogou.com",
+                    403,
+                    "Forbidden",
+                    {},
+                    None,
+                )
+            return "<html></html>"
+
+        result: dict[str, object] = search("DeepSeek V4 Flash", fetch=fetch)
+
+        self.assertEqual(request_count, 4)
+        self.assertEqual(result["search_executed"], True)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,7 +5,6 @@ import http.cookiejar
 import json
 import re
 import time
-import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -156,18 +155,13 @@ def _http_fetcher() -> Callable[[str], str]:
 
 
 def _fetch_with_retry(fetch: Callable[[str], str], url: str) -> str:
-    for _retry in range(3):
+    for retry in range(4):
         try:
             return fetch(url)
-        except urllib.error.HTTPError as error:
-            retryable: bool = error.code == 429 or error.code >= 500
-            if not retryable:
+        except Exception:
+            if retry == 3:
                 raise
-        except (urllib.error.URLError, TimeoutError):
-            pass
         time.sleep(1)
-
-    return fetch(url)
 
 
 def search(

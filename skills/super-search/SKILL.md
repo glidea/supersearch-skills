@@ -10,6 +10,7 @@ description: Aggregate Web, Linux.do, V2EX, Xiaohongshu, WeChat Official Account
 1. Identify the core question, time range, and claims that need verification.
 2. Use Chinese queries for Chinese communities and add natural English queries for Reddit and X. Do not merely translate word for word.
 3. When the user does not specify sources, run `$linuxdo-search`, `$v2ex-search`, `$xiaohongshu-search`, `$wechat-search`, `$douyin-search`, `$telegram-search`, `$reddit-search`, `$x-search`, and built-in Web search in parallel without skipping sources. When the user specifies sources, call only those sources.
+   Before marking any dedicated source unavailable, retry every failed search three times, including HTTP 4xx/5xx responses and connection errors.
    When Linux.do, V2EX, or Reddit returns no citation, immediately run built-in Web searches for `site:linux.do "core name"`, `site:v2ex.com/t "core name"`, or `site:reddit.com "core name"`. If dedicated and Web results conflict, prefer an accessible primary post.
 4. For Web search, prefer official documentation, project repositories, papers, announcements, and primary statements. Use community search to find practical experience, disputes, failures, and user feedback.
 5. For real-time topics, pass the user's `--from` and `--to` values to X. When no range is given, choose a reasonable range and state it.
