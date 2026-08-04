@@ -7,10 +7,12 @@ description: Aggregate Web, Linux.do, V2EX, Xiaohongshu, WeChat Official Account
 
 ## Search workflow
 
+0. **Load and execute the dependent source skills before searching.** This skill is an orchestrator, not a replacement for `$linuxdo-search`, `$v2ex-search`, `$xiaohongshu-search`, `$wechat-search`, `$douyin-search`, `$telegram-search`, `$reddit-search`, and `$x-search`. When a source skill is listed below, read its `SKILL.md` and invoke that skill's search workflow or tool. Do not treat merely reading this file as having searched the source. Do not silently replace a dedicated source search with built-in Web search.
+
 1. Identify the core question, time range, and claims that need verification.
 2. Use Chinese queries for Chinese communities and add natural English queries for Reddit and X. Do not merely translate word for word.
 3. When the user does not specify sources, run `$linuxdo-search`, `$v2ex-search`, `$xiaohongshu-search`, `$wechat-search`, `$douyin-search`, `$telegram-search`, `$reddit-search`, `$x-search`, and built-in Web search in parallel without skipping sources. When the user specifies sources, call only those sources.
-   Before marking any dedicated source unavailable, retry every failed search three times, including HTTP 4xx/5xx responses and connection errors.
+   Before marking any dedicated source unavailable, retry the actual dedicated skill/tool three times, including HTTP 4xx/5xx responses and connection errors. If the skill or tool cannot be loaded or invoked, report that exact failure and do not claim the source was searched. Only then use the documented Web fallback for Linux.do, V2EX, or Reddit.
    When Linux.do, V2EX, or Reddit returns no citation, immediately run built-in Web searches for `site:linux.do "core name"`, `site:v2ex.com/t "core name"`, or `site:reddit.com "core name"`. If dedicated and Web results conflict, prefer an accessible primary post.
 4. For Web search, prefer official documentation, project repositories, papers, announcements, and primary statements. Use community search to find practical experience, disputes, failures, and user feedback.
 5. For real-time topics, pass the user's `--from` and `--to` values to X. When no range is given, choose a reasonable range and state it.
