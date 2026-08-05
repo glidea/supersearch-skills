@@ -15,6 +15,14 @@ description: Quickly aggregate built-in Web, Linux.do, X, Reddit, and V2EX searc
 6. For real-time topics, pass the user's `--from` and `--to` values to X. When no range is given, choose a reasonable range and state it.
 7. Merge duplicate events and reposts, prefer accessible primary pages, and distinguish confirmed facts, community opinions, and unverified information.
 
+## Execution requirements
+
+- This skill is incomplete until every enabled source has an explicit result status. At minimum record `searched`, `citations`, `error`, and `fallback_used` for Linux DO, V2EX, Reddit, X, and Web.
+- `$linuxdo-search`, `$v2ex-search`, `$reddit-search`, and `$x-search` are mandatory dedicated sub-skills when their sources are enabled. Do not treat reading this file or running Web search alone as executing them.
+- Before searching, resolve each named sub-skill to its `SKILL.md` and follow its invocation instructions. If the runtime cannot invoke a sub-skill, mark it unavailable and immediately run its required site-specific Web fallback.
+- Run independent source searches in parallel where the runtime supports it. Do not skip a source because another source already produced results.
+- Before answering, verify that the final response accounts for every enabled source, including sources with `search_executed: false`, errors, or no citations. Never silently omit a source.
+
 ## Citation rules
 
 - Cite only pages actually returned by the Web tool.
